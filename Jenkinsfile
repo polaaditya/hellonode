@@ -60,7 +60,7 @@ node {
            sh '''
            sleep 90
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
-           STATUS=`curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2`
+           STATUS=$(curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2)
            echo $STATUS
            if [ $STATUS == "200" ]; then
               echo OK
