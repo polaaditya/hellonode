@@ -62,7 +62,7 @@ node {
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
            STATUS=`curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2`
            echo $STATUS
-           if [ STATUS == "200" ]; then
+           if [ $STATUS == "200" ]; then
               echo OK
               PREV_BUILD = sh 'expr ${BUILD_NUMBER} - 1'
               sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}'
