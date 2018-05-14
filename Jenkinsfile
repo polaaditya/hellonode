@@ -60,10 +60,9 @@ node {
            sh '''
            sleep 60
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
-           status=`curl -Is $APP_URL:8000 | head -1`
+           status=`curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2`
            echo $status
-           validate=$status
-           if [ ${validate[-2]} == "200" ]; then
+           if [ status == "200" ]; then
               echo OK
           else
               echo NOT RESPONDING
