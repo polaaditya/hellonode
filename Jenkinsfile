@@ -62,8 +62,8 @@ node {
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
            STATUS=$(curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2)
            echo $STATUS
-           if [ $STATUS == "200" ]; then
-              PREV_BUILD=`expr ${BUILD_NUMBER} - 1`
+           PREV_BUILD=$(expr ${BUILD_NUMBER} - 1)
+           if [ $STATUS == "200" && $PREV_BUILD>=1 ]; then
               aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}
           else
               echo SERVER NOT RESPONDING
