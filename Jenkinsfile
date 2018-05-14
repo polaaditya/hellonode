@@ -40,8 +40,8 @@ node {
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
            sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} --template-body file://aws-cft.yaml'
-           sh 'aws cloudformation describe-stacks --stack-name myapp-stack-${BUILD_NUMBER}'
-           APP_URL = sh 'aws cloudformation describe-stacks --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d\':\' -f2 | tr -d \'",\''
+           sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER}'
+           APP_URL = sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d\':\' -f2 | tr -d \'",\''
            sh '######################################################'
            sh ' Your Node JSApplication is running on ${APP_URL}:8000'
            sh '######################################################'
