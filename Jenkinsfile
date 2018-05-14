@@ -43,9 +43,8 @@ node {
            sleep 30
            sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER}'
            sh '''
-           export APP_URL = aws cloudformation describe-stacks --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'
+           APP_URL=`aws cloudformation describe-stacks --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
            echo $APP_URL
-           '''
            echo '######################################################'
            sh 'echo "Your Node JSApplication is running on ${APP_URL}:8000"'
            echo '######################################################'
