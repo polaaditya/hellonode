@@ -55,8 +55,8 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
-           def PREV_BUILD = sh 'expr ${BUILD_NUMBER} - 1'
-           sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD} --template-body file://aws-cft.yaml'
+           PREV_BUILD = sh 'expr ${BUILD_NUMBER} - 1'
+           sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}'
           }
 
     }
