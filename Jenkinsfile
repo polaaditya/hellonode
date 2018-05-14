@@ -43,9 +43,9 @@ node {
            sleep 30
            sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER}'
            def APP_URL = sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d\':\' -f2 | tr -d \'",\''
-           sh '######################################################'
-           sh ' Your Node JSApplication is running on $APP_URL:8000'
-           sh '######################################################'
+           echo '######################################################'
+           echo ' Your Node JSApplication is running on $APP_URL:8000'
+           echo '######################################################'
           }
 
     }
