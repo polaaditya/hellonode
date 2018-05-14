@@ -40,7 +40,7 @@ node {
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
            sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} --template-body file://aws-cft.yaml'
-           sleep 10
+           sleep 20
            sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER}'
            sh '''
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
@@ -63,11 +63,10 @@ node {
            STATUS=$(curl -Is $APP_URL:8000| grep HTTP | cut -d ' ' -f2)
            echo $STATUS
            if [ $STATUS == "200" ]; then
-              echo OK
               PREV_BUILD=`expr ${BUILD_NUMBER} - 1`
-              sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}'
+              aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}
           else
-              echo NOT RESPONDING
+              echo SERVER NOT RESPONDING
           fi
            '''
           }
