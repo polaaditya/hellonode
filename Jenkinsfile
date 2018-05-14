@@ -38,6 +38,6 @@ node {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-         aws cloudformation create-stack --stack-name myapp-stack --template-body file://aws-cft.yaml
+         sh 'aws cloudformation create-stack --stack-name myapp-stack --template-body file://aws-cft.yaml'
     }
 }
