@@ -39,7 +39,8 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
-            sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-"${env.BUILD_NUMBER}" --template-body file://aws-cft.yaml'
+           echo ${env.BUILD_NUMBER}
+           sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-${env.BUILD_NUMBER} --template-body file://aws-cft.yaml'
           }
 
     }
