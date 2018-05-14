@@ -59,8 +59,8 @@ node {
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
            sh '''
            APP_URL=`aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d':' -f2 | tr -d '",'`
-           status="$(curl -Is $APP_URL:8000 | head -1)"
-           validate=($status)
+           status=`$(curl -Is $APP_URL:8000 | head -1)`
+           validate=$status
            if [ ${validate[-2]} == "200" ]; then
               echo OK
           else
