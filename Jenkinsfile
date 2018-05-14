@@ -44,7 +44,7 @@ node {
            sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER}'
            def APP_URL = sh 'aws cloudformation describe-stacks --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} | grep OutputValue | cut -d\':\' -f2 | tr -d \'",\''
            echo '######################################################'
-           echo ' Your Node JSApplication is running on ${APP_URL}:8000'
+           sh 'echo "Your Node JSApplication is running on ${APP_URL}:8000"'
            echo '######################################################'
           }
 
@@ -55,7 +55,7 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
-           PREV_BUILD = sh 'expr `${BUILD_NUMBER}` - 1'
+           def PREV_BUILD = sh 'expr `${BUILD_NUMBER}` - 1'
            sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD} --template-body file://aws-cft.yaml'
           }
 
