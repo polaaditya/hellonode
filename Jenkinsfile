@@ -57,8 +57,19 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
-           PREV_BUILD = sh 'expr ${BUILD_NUMBER} - 1'
-           sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}'
+           sh '''
+           echo $APP_URL
+           status="$(curl -Is $APP_URL:8000 | head -1)"
+           validate=($status)
+           if [ ${validate[-2]} == "200" ]; then
+              echo OK
+          else
+              echo NOT RESPONDING
+          fi
+           // PREV_BUILD = sh 'expr ${BUILD_NUMBER} - 1'
+           // sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD}'
+
+           '''
           }
 
     }
