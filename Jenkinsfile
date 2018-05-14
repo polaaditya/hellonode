@@ -33,15 +33,25 @@ node {
             app.push("latest")
         }
     }
-    stage('Deploy') {
+    stage('Deploy New Stack') {
         /* Finally, we'll push the image with two tags:
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
-           echo ${env.BUILD_NUMBER}
-           sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-${env.BUILD_NUMBER} --template-body file://aws-cft.yaml'
+           sh 'aws cloudformation create-stack --region us-east-1 --stack-name myapp-stack-${BUILD_NUMBER} --template-body file://aws-cft.yaml'
           }
 
     }
+    // stage('Delete Old Stack') {
+    //     /* Finally, we'll push the image with two tags:
+    //      * First, the incremental build number from Jenkins
+    //      * Second, the 'latest' tag.
+    //      * Pushing multiple tags is cheap, as all the layers are reused. */
+    //      withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-authentication']]) {
+    //        PREV_BUILD = sh 'expr `${BUILD_NUMBER}` - 1'
+    //        sh 'aws cloudformation delete-stack --region us-east-1 --stack-name myapp-stack-${PREV_BUILD} --template-body file://aws-cft.yaml'
+    //       }
+    //
+    // }
 }
